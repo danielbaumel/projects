@@ -1,2 +1,2 @@
 # projects
-projects from the data science course
+the weather project provides the weather conditions of a selected city
