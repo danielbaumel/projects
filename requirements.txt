@@ -1,1 +1,8 @@
-
+the libraries needed for this project are:
+1) requests
+2) json
+3) datetime
+4) pytz
+5) TimezoneFinder
+6) geocoder
+7) pathlib
