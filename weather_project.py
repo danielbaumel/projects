@@ -22,8 +22,8 @@ def fav_locations():
         favorite_locations_list.append(favorite_location)
         if not favorite_location:
             break
-    with open(p / "fav.json", "a") as fav_file:
-        json.dump(favorite_locations_list, fav_file, indent=4)
+    with open(p / "fav.json", "w") as fav_file:
+        json.dump(favorite_locations_list, fav_file)
 
 
 def reading_fav_file():
@@ -78,7 +78,7 @@ if not default_path.exists():
 fav_path = p / "fav.json"
 if not fav_path.exists():
     with open(fav_path, "w") as f:
-        json.dump("tel aviv", f)
+        json.dump("tel aviv, new york", f)
 
 welcome = input("Hello, place a city name to receive it's weather conditions, write fav to choose from a list of "
                 "favorite locations or press enter for the default city's weather conditions")
