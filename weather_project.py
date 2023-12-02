@@ -6,8 +6,6 @@ from timezonefinder import TimezoneFinder
 import geocoder
 from pathlib import Path
 
-p = Path("c:/users/user")
-
 
 def default_location():
     # changing the default city
@@ -20,22 +18,22 @@ def fav_locations():
     # inserting several favorite places
     favorite_locations_list = []
     while True:
-        default_location = input('insert favorite weather locations')
-        favorite_locations_list.append(default_location)
-        if not default_location:
+        favorite_location = input('insert favorite weather locations')
+        favorite_locations_list.append(favorite_location)
+        if not favorite_location:
             break
     with open(p / "fav.json", "a") as fav_file:
-        json.dump(favorite_locations_list, fav_file)
-    return fav_write
+        json.dump(favorite_locations_list, fav_file, indent=4)
+
 
 def reading_fav_file():
     # reading the fav locations json file
-    with open(p / "fav.json", "r") as fav_file:
-        fav_read = json.load(fav_file)
+    with open(p / "fav.json", "r") as fav_r:
+        fav_read = json.load(fav_r)
     print(fav_read)
 
 
-def request_weather(city_name=default_location, units="standard"):
+def request_weather(location=default_location):
     # returning the weather conditions of specific place
     weather = requests.get(
         "http://api.openweathermap.org/data/2.5/weather",
@@ -70,6 +68,18 @@ def display_date_time(user_timezone, location_timezone=None):
         print(f"Date and time in {location_timezone}: {formatted_location_time}")
 
 
+p = Path("c:/users/user")
+
+default_path = p / "default.json"
+if not default_path.exists():
+    with open(default_path, "w") as f:
+        json.dump("tel aviv", f)
+
+fav_path = p / "fav.json"
+if not fav_path.exists():
+    with open(fav_path, "w") as f:
+        json.dump("tel aviv", f)
+
 welcome = input("Hello, place a city name to receive it's weather conditions, write fav to choose from a list of "
                 "favorite locations or press enter for the default city's weather conditions")
 if welcome:
@@ -92,10 +102,10 @@ else:
                                       f"weather conditions")
     if changing_default_location:
         default_location()
-        with open("default.json", "r") as f:
+        with open(p / "default.json", "r") as f:
             city_name = json.load(f)
     else:
-        with open("default.json", "r") as f:
+        with open(p / "default.json", "r") as f:
             city_name = json.load(f)
 
 temp_units = input("\nPress c for Celsius or f for Fahrenheit otherwise standard kelvin will be presented")
@@ -108,7 +118,7 @@ elif temp_units == "f":
 else:
     temp_u = "°K"
     units = "standard"
-weather_condition = request_weather(city_name, units)
+weather_condition = request_weather(city_name)
 
 temperature = weather_condition["main"]["temp"]
 feels_like = weather_condition["main"]["feels_like"]
@@ -122,8 +132,8 @@ city_lat = weather_condition["coord"]["lat"]
 place_name = weather_condition["name"]
 
 current_lat_lon = current_geographical_coordination()
-current_lat = current_lat_lon[0]
-current_lon = current_lat_lon[1]
+current_lat = current_lat_lon[1]
+current_lon = current_lat_lon[0]
 
 current_timezone_region = finding_timezone(current_lon, current_lat)
 city_timezone_region = finding_timezone(city_lon, city_lat)
